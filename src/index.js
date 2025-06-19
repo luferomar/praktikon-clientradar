@@ -1,9 +1,8 @@
-import 'mapbox-gl/dist/mapbox-gl.css';
-import 'mapbox-gl/dist/mapbox-gl.css';  // ✅ esto aplica los estilos globalmente
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-import App from './App';
-import './index.css';  // tus estilos
+import App from './App'; // ✅ debe existir App.js o App.jsx
+import './index.css';
 
 const root = ReactDOM.createRoot(document.getElementById('root'));
 root.render(<App />);
+
