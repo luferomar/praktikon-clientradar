@@ -66,9 +66,13 @@ function ClientRadar() {
         <button onClick={() => alert("Función 1 activada")}>Función 1</button>
         <button onClick={() => alert("Función 2 activada")}>Función 2</button>
         <button onClick={() => alert("Función 3 activada")}>Función 3</button>
-        <button onClick={() => setChatVisible(!chatVisible)}>
-          {chatVisible ? "Cerrar chat" : "Pregúntale a Edison"}
-        </button>
+        <button
+  className="floating-gpt-button"
+  onClick={() => setChatVisible(!chatVisible)}
+>
+  💬
+</button>
+
       </div>
 
       {chatVisible && (
