@@ -1,78 +1,71 @@
 // src/ClientRadar.jsx
-import React, { useEffect, useState } from 'react';
+import React, { useEffect } from 'react';
 import mapboxgl from 'mapbox-gl';
 import './index.css';
 
 mapboxgl.accessToken = process.env.REACT_APP_MAPBOX_TOKEN;
 
 function ClientRadar() {
-  const [map, setMap] = useState(null);
-  const [userLocation, setUserLocation] = useState(null);
-
   useEffect(() => {
-    navigator.geolocation.getCurrentPosition(
-      (position) => {
-        const userCoords = [position.coords.longitude, position.coords.latitude];
-        setUserLocation(userCoords);
+    const map = new mapboxgl.Map({
+      container: 'map',
+      style: 'mapbox://styles/mapbox/streets-v11',
+      center: [-74.1, 4.7],
+      zoom: 12
+    });
 
-        const mapInstance = new mapboxgl.Map({
-          container: 'map',
-          style: 'mapbox://styles/mapbox/streets-v11',
-          center: userCoords,
-          zoom: 14,
-        });
+    // Centrar en la ubicación del usuario
+    if (navigator.geolocation) {
+      navigator.geolocation.getCurrentPosition(
+        position => {
+          const { longitude, latitude } = position.coords;
+          map.setCenter([longitude, latitude]);
 
-        new mapboxgl.Marker({ color: 'blue' })
-          .setLngLat(userCoords)
-          .setPopup(new mapboxgl.Popup().setText('Ubicación actual'))
-          .addTo(mapInstance);
+          new mapboxgl.Marker({ color: 'blue' })
+            .setLngLat([longitude, latitude])
+            .setPopup(new mapboxgl.Popup().setText('Estás aquí'))
+            .addTo(map);
+        },
+        error => console.error('Error en geolocalización:', error),
+        { enableHighAccuracy: true }
+      );
+    }
 
-        // Zona caliente fija (ejemplo)
-        new mapboxgl.Marker({ color: 'red' })
-          .setLngLat([-74.1, 4.7])
-          .setPopup(new mapboxgl.Popup().setText('Zona caliente'))
-          .addTo(mapInstance);
-
-        setMap(mapInstance);
-      },
-      (error) => {
-        alert('No se pudo obtener tu ubicación');
-        console.error(error);
-      },
-      { enableHighAccuracy: true }
-    );
+    // Zona caliente fija
+    new mapboxgl.Marker({ color: 'red' })
+      .setLngLat([-74.1, 4.7])
+      .setPopup(new mapboxgl.Popup().setText('Zona caliente'))
+      .addTo(map);
   }, []);
 
-  const handleFunction = (id) => {
-    switch (id) {
-      case 1:
-        alert('Función 1 activada: mostrar estadísticas por zona.');
-        break;
-      case 2:
-        alert('Función 2 activada: analizar zonas activas.');
-        break;
-      case 3:
-        alert('Función 3 activada: mostrar historial de viajes.');
-        break;
-      default:
-        break;
-    }
+  // Funciones conectadas a los botones
+  const handleFuncion1 = () => {
+    alert('Función 1 activada: Panel de estadísticas futuras');
+  };
+
+  const handleFuncion2 = () => {
+    alert('Función 2 activada: Configuración del conductor');
+  };
+
+  const handleFuncion3 = () => {
+    alert('Función 3 activada: Escaneo de zonas activas');
   };
 
   return (
     <>
       <div className="panel-edison">
         <h3>Panel Edison</h3>
-        <button onClick={() => handleFunction(1)}>Función 1</button>
-        <button onClick={() => handleFunction(2)}>Función 2</button>
-        <button onClick={() => handleFunction(3)}>Función 3</button>
+        <button onClick={handleFuncion1}>Función 1</button>
+        <button onClick={handleFuncion2}>Función 2</button>
+        <button onClick={handleFuncion3}>Función 3</button>
       </div>
-      <div id="map" className="map-container" />
+      <div id="map" style={{ width: '100%', height: '100vh' }} />
     </>
   );
 }
 
 export default ClientRadar;
+
 
 
 
